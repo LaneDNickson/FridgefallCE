@@ -1,0 +1,204 @@
+[i]FRIDGE
+[i]"000000000000000000033333333333000003BBBBBBBBB3000003BBBBBBBBB3000003FFBBBBBBB3000003BBBBBBBBB3000003EEEEEEEEE3000003BBBBBBBBB3000003FFBBBBBBB3000003BBBBBBBBB3000003BBBBBBBBB3000003BBBBBBBBB3000003BBBBBBBBB3000003BBBBBBBBB30000033333333333000000000000000000"
+[i](C) 2018 OldNewTimer
+[i]Please Note: This game is completely free to use. If you have paid for it, you have been swindled. Demand your money back immediately.
+[i]Disclaimer: By playing this software you agree to take all responsibility for any damages, hardware and software, caused to your calculator.
+[i]--------------------------------------
+[i] Program Name: Falling Fridges
+[i] Author: Lane "OldNewTimer" Nickson
+[i] Build: Pre-Alpha
+[i] Language: ICE 2.0
+[i]--------------------------------------
+[i]VARIABLES
+[i]GETKEY- getkey Variable
+[i]SCALE- Scaled Sprite Output
+[i]SELECT- Selected Fridge
+[i]BUFF- Velocity Buffer
+[i]V- Velocity
+[i]KEYO/KEYT - Detects left right
+[i]X/Y- Fridge Coordinates
+[i]O- Option
+[i]C- FOR Variable
+[i]A- PillowX 
+[i]B- PillowY
+[i]Screen Size 320x240
+
+[i]old=4*4 (ptr is SPRITE), DefineSprite(8,8->SCALE / det(82,SPRITE,SCALE / makes SCALE an 8*8 version of the old sprite
+
+[i]Get Things Ready
+AsmComp(FRIGRA
+	
+Begin
+	0->KEY->V->X->KEYO->KEYT->BUFF->Y->O->L1(1)->L2(1)->C->B
+	0->L1(1)->L2(1)->L1(2)->L2(2)->L1(3)->L2(3)
+	1->A->LOSE->POINTS
+	max(40,remainder(rand,280))->A
+[i]Show Logo
+SetTextTransparentColor(254
+FillScreen(255)
+ScaledSprite_NoClip(LOGO,20,70,40,40)
+SetTextScale(2,2
+PrintStringXY("OldNewTimer",120,100
+	For(LOG,255,1,0-1)
+		SetBrightness(LOG)
+		Pause 8
+	End
+		Pause 100
+
+[i]Fridge Selection Screen
+	60->Y
+	SetDraw(1)
+	FillScreen(30
+	SetTextFGColor(255
+	SetTextBGColor(254
+	SetTextScale(3,3
+	PrintStringXY("FRIDGEFALL",45,10
+	SetTextScale(1,1
+	Blit(1)
+	1->O
+	While KEY!=9
+		getKey->KEY
+		If KEY=3
+			O+1->O
+			60->Y
+			If O=8
+				1->O
+			End
+		End
+		If KEY=2
+			O-1->O
+			60->Y
+			If O=0
+				7->O
+			End
+		End
+		If KEY=15
+			Goto STOP
+		End
+	Call OPT
+		While Y<=135 and O<=7
+			SetColor(30)
+			FillRectangle_NoClip(30,50,165,200)
+			ScaledSprite_NoClip(DISP,120,Y,7,7)
+			Y+3->Y
+			PrintStringXY("VER: Release 1.0",205,230
+			PrintStringXY("(C) 2018 OldNewTimer",85,35
+			PrintStringXY("Use Arrow Keys to Select Fridge",55,45
+			PrintStringXY("Press Enter to Start!",85,55
+			Blit(1)
+		End
+	End
+Goto SCALE
+Lbl OPT
+		If O=1
+			FA->DISP
+		End
+		If O=2
+			FB->DISP
+		End
+		If O=3
+			FC->DISP
+		End
+		If O=4
+			FD->DISP
+		End
+		If O=5
+			FE->DISP
+		End
+		If O=6
+			FF->DISP
+		End
+		If O=7
+			FG->DISP
+		End
+Return
+
+
+[i] Display Game Graphics
+
+Lbl SCALE
+[i]rescale sprite
+DISP->SELECT
+	0->X+169->Y
+	270->X
+DefineSprite(40,60)->SCALE
+det(82,SELECT,SCALE
+
+FillScreen(0)
+	While KEY!=15
+		getKey->KEY
+		getKey(2)->KEYO
+		getKey(3)->KEYT
+		If KEYT=1
+			min(X+V,280)->X
+		End
+		If KEYO=1
+			max(X-V,10)->X
+		End
+		BUFF+1->BUFF
+		If BUFF=10
+			min(10,V+1)->V
+			0->BUFF
+		End
+		If KEYO=0 and KEYT=0
+			1->V
+		End
+		SetDraw(1)
+		SetColor(0)
+		FillRectangle_NoClip(X-10,179,20,20)
+		ScaledSprite_NoClip(KITCH,0,0,8,8)
+		Sprite(SCALE,X,Y)
+		SetTextScale(1,1)
+		PrintStringXY("Points:",200,128
+		SetTextXY(250,128)
+		PrintUInt(POINTS,5)
+		Call GEN
+		Blit(1)
+	End
+Goto STOP
+
+[i]Generate Pillows
+	Lbl GEN
+			ScaledSprite_NoClip(PILLOWONE,A,B,4,4)
+		2+B->B
+		If B>=220
+			max(40,remainder(rand,280))->A
+			max(0,(POINTS-1))->POINTS
+					If POINTS<1
+					Call LOSE
+					Return
+					End
+				FillScreen(224)
+				SetTextScale(3,3)
+				PrintStringXY("OOF!",120,100
+				Blit(1)
+				Pause 400
+				0->B
+		End
+		If B>=153
+			If A>=(X-40) and A<=(X+50)
+				max(20,remainder(rand,280))->A
+				(POINTS+1)->POINTS
+				0->B
+			End
+		End
+	If POINTS>=10
+		1+B->B
+	End
+	If POINTS>=100
+		1+B->B
+	End
+	If POINTS>=1000
+		1+B->B
+	End
+Return
+	Lbl LOSE
+				FillScreen(224)
+				SetTextScale(3,3)
+				PrintStringXY("GAME OVER",70,100
+				Blit(1)
+	Pause 
+	15->KEY
+	Return
+Lbl STOP
+det(1)

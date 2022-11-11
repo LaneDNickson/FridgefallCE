@@ -1,7 +1,7 @@
 # Fridgefall CE
 A chill game for the TI-84 Plus CE calculator. You are a fridge attempting to catch all of the pillows you can. If you lose more pillows than you gain, you melt. Try to get as many pillows stuffed inside of you as possible!
 
-![Game GIF](https://oldnewtimer.github.io/images/frf.gif)
+![Game GIF](https://lanednickson.github.io/images/frf.gif)
                                                                                                                                          
 ## Installation
 
